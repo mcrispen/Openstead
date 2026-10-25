@@ -19,6 +19,10 @@ on:
       - 'libs/**'
       - 'services/**'
       - 'admin_frontend/**'
+      - 'Dockerfile'
+      - 'services/appflowy-worker/Dockerfile'
+      - 'docker-compose-ci.yml'
+      - '.github/workflows/integration_test.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
