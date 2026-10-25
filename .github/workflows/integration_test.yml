@@ -8,6 +8,10 @@ on:
       - 'libs/**'
       - 'services/**'
       - 'admin_frontend/**'
+      - 'Dockerfile'
+      - 'services/appflowy-worker/Dockerfile'
+      - 'docker-compose-ci.yml'
+      - '.github/workflows/integration_test.yml'
   pull_request:
     branches: [ main ]
     paths:
@@ -54,7 +58,7 @@ jobs:
         run: |
           export DOCKER_DEFAULT_PLATFORM=linux/amd64
           cp deploy.env .env
-          docker compose build \
+          docker compose -f docker-compose-ci.yml build \
             --parallel \
             --build-arg BUILDKIT_INLINE_CACHE=1 \
             --build-arg PROFILE=debug \
@@ -62,9 +66,9 @@ jobs:
 
       - name: Save Docker Images
         run: |
-          docker save appflowyinc/appflowy_cloud:latest | gzip > appflowy_cloud.tar.gz
-          docker save appflowyinc/appflowy_worker:latest | gzip > appflowy_worker.tar.gz
-          docker save appflowyinc/admin_frontend:latest | gzip > admin_frontend.tar.gz
+          docker save ghcr.io/mcrispen/openstead-cloud:latest | gzip > appflowy_cloud.tar.gz
+          docker save ghcr.io/mcrispen/openstead-worker:latest | gzip > appflowy_worker.tar.gz
+          docker save ghcr.io/mcrispen/openstead-admin:latest | gzip > admin_frontend.tar.gz
 
       - name: Upload Docker Images as Artifacts
         uses: actions/upload-artifact@v4
